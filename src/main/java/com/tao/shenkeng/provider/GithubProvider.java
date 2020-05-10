@@ -5,10 +5,12 @@ import com.tao.shenkeng.dto.AccessTokenDTO;
 import com.tao.shenkeng.dto.GithubUser;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
-
+/*
+* 配置Github oAuth
+* */
 @Component
 public class GithubProvider {
-
+    //通过code来获取accessToken
     public String getAccessToken(AccessTokenDTO accessTokenDTO){
         MediaType mediaType = MediaType.get("application/json; charset=utf-8");
 
@@ -29,7 +31,7 @@ public class GithubProvider {
         return null;
     }
 
-
+    //通过发回accessToken来获取用户信息
     public GithubUser getUser(String accessToken){
         OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
