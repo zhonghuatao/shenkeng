@@ -16,4 +16,7 @@ public interface UserMapper {
     //用token查询用户的信息
     @Select("select * from user where token=#{token}")
     User findByToken(@Param("token") String token);
+
+    @Select("select * from user where id=#{id}")
+    User findById(@Param("id")int id);
 }
