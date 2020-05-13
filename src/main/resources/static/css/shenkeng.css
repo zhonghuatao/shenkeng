@@ -13,7 +13,7 @@ body{
 }
 
 .row{
-    margin-bottom: 15%;
+    margin-bottom: 5%;
 }
 .navbar-toggle {
     padding: 6px 10px;
@@ -27,4 +27,10 @@ body{
     font-size: 10px;
     color: #cab5b5;
     margin-top: 3px;
+}
+.active{
+    background-color: #2aabd2;
+}
+.form-control{
+    resize: none;
 }

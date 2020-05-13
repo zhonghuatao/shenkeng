@@ -1,5 +1,6 @@
 package com.tao.shenkeng.service;
 
+import com.tao.shenkeng.dto.PaginationDTO;
 import com.tao.shenkeng.dto.QuestionDTO;
 import com.tao.shenkeng.mapper.QuestionMapper;
 import com.tao.shenkeng.mapper.UserMapper;
@@ -19,9 +20,14 @@ public class QuestionService {
     @Autowired
     private UserMapper userMapper;
     //user数据表和question表连接
-    public List<QuestionDTO> list() {
-        List<Question> questions = questionMapper.list();
+    public PaginationDTO list(Integer page, Integer size) {
+        //分页数据
+        Integer totalCount = questionMapper.Count();
+        PaginationDTO paginationDTO = new PaginationDTO();
+        Integer offset=size*(page-1);
+        List<Question> questions = questionMapper.list(offset,size);
         List<QuestionDTO> questionDTOList=new ArrayList<>();
+
         for (Question question:questions) {
           User user=  userMapper.findById(question.getCreator());
           QuestionDTO questionDTO=new QuestionDTO();
@@ -29,6 +35,8 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        return questionDTOList;
+        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setPagination(totalCount,page,size);
+        return paginationDTO;
     }
 }
