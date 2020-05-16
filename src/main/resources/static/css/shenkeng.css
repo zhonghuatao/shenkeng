@@ -34,3 +34,12 @@ body{
 .form-control{
     resize: none;
 }
+.profile .section{
+    margin-top: 15px;
+}
+.question{
+    margin-top: 15px;
+}
+.img{
+    margin:5px;
+}

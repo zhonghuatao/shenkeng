@@ -1,27 +1,34 @@
 package com.tao.shenkeng.controller;
 
-import com.tao.shenkeng.mapper.QuestionMapper;
-import com.tao.shenkeng.mapper.UserMapper;
+import com.tao.shenkeng.dto.QuestionDTO;
 import com.tao.shenkeng.model.Question;
 import com.tao.shenkeng.model.User;
+import com.tao.shenkeng.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class PublishController {
+
     @Autowired
-    private Question question;
-    @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private QuestionMapper questionMapper;
+    private QuestionService questionService;
+
+    @GetMapping("/publish/{id}")
+    public String edit(@PathVariable(name = "id")Integer id,
+                       Model model){
+        QuestionDTO question = questionService.getById(id);
+        model.addAttribute("title",question.getTitle());
+        model.addAttribute("description",question.getDescription());
+        model.addAttribute("tag",question.getTag());
+        return "/publish";
+    }
 
     @GetMapping("/publish")
     public String publish(){
@@ -30,25 +37,13 @@ public class PublishController {
 
     @PostMapping("/publish")
     public String doPublish(
-            @RequestParam("title") String title,
-            @RequestParam("description") String description,
-            @RequestParam("tag") String tag,
+            @RequestParam(value = "title",required = false) String title,
+            @RequestParam(value = "description",required = false) String description,
+            @RequestParam(value = "tag",required = false) String tag,
+            @RequestParam(value = "id",required = false)Integer id,
             Model model,
             HttpServletRequest request ){
-        User user = null;
-        Cookie[] cookies = request.getCookies();
-        if (cookies!=null&&cookies.length!=0) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")) {
-                    String token = cookie.getValue();
-                    user = userMapper.findByToken(token);
-                    if (user != null) {
-                        request.getSession().setAttribute("user", user);
-                    }
-                    break;
-                }
-            }
-        }
+        User user = (User) request.getSession().getAttribute("user");
         model.addAttribute("title",title);
         model.addAttribute("description",description);
         model.addAttribute("tag",tag);
@@ -69,14 +64,13 @@ public class PublishController {
             return "publish";
         }
 
-
+        Question question=new Question();
+        question.setId(id);
         question.setTitle(title);
         question.setTag(tag);
         question.setDescription(description);
-        question.setGmt_create(System.currentTimeMillis());
-        question.setGmt_modified(question.getGmt_create());
         question.setCreator(user.getId());
-        questionMapper.create(question);
+        questionService.createOrUpDate(question);
         return "redirect:/";
     }
 }

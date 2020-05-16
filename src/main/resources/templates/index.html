@@ -14,7 +14,7 @@
 <div class="container-fluid main" >
     <div class="row">
         <div class="col-lg-9 col-md-12 col-xs-12 col-sm-12">
-            <h2><span  class="glyphicon glyphicon-thumbs-up"></span>推荐</h2>
+            <h2><span  class="glyphicon glyphicon-thumbs-up img"></span>推荐</h2>
             <hr>
             <div class="media" th:each="question:${pagination.questions}">
                 <div class="media-left media-middle">
@@ -23,7 +23,9 @@
                     </a>
                 </div>
                 <div class="media-body">
-                    <h4 class="media-heading" th:text="${question.title}"></h4>
+                    <h4 class="media-heading" >
+                        <a th:href="@{'/question/'+${question.id}}" th:text="${question.title}"></a>
+                    </h4>
                     <span th:text="${question.tag}"></span>
                     <span class="des">
                         <span th:text="${question.comment_count}"></span>个回复·
@@ -63,7 +65,7 @@
         </div>
 
         <div class="col-lg-3 col-md-12 col-xs-12 col-sm-12">
-            <h2 >ADASDASJHFaaaaaaaaaaaaaaaaaa</h2>
+            <h2 >热门话题</h2>
             <ul>
                 <li>Coffee</li>
                 <li>Tea</li>
