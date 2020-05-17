@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>error</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script type="text/javascript"  src="webjars/jquery/2.1.1/jquery.js"  charset="UTF-8"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.css"/>
+    <link rel="stylesheet" href="/css/shenkeng.css"/>
+</head>
+<body>
+<div th:insert="navigation :: nav"></div>
+<div class="jumbotron">
+        <h1>出错了！！！</h1>
+        <p th:text="${message}"></p>
+        <p><a href="/" >返回主页</a></p>
+</div>
+</body>
+</html>

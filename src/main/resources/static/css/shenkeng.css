@@ -43,3 +43,7 @@ body{
 .img{
     margin:5px;
 }
+.jumbotron{
+    margin: 50px;
+    background: #e3e3e8;
+}

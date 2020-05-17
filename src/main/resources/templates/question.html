@@ -38,7 +38,7 @@
             </div>
             <div class="media-body">
                 <h5 class="media-heading" >
-                    <span th:text="${question.user.name}"></span>
+                    <span th:if="${session.user!=null}" th:text="${question.user.name}"></span>
                 </h5>
             </div>
             <hr>
