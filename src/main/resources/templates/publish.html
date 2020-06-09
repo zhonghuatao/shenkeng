@@ -31,7 +31,7 @@
                         <label for="tag">添加标签</label>
                         <input type="text" class="form-control" th:value="${tag}" name="tag" id="tag" placeholder="问题标签,以逗号隔开">
                     </div>
-                        <div class="alert alert-danger " th:if="${error}!=null" th:text="${error}"> </div>
+                    <div class="alert alert-danger " th:if="${error}!=null" th:text="${error}"> </div>
                     <button type="submit" class="btn btn-success" >发布</button>
                 </form>
             </div>

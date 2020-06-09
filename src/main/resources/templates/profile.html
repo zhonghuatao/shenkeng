@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/shenkeng.css"/>
 </head>
 <body>
+<!--我的提问-->
 <div th:insert="navigation :: nav"></div>
 <div class="container-fluid main profile" >
     <div class="row">
@@ -23,7 +24,7 @@
                     </a>
                 </div>
                 <div class="media-body">
-                    <h4 class="media-heading" th:text="${question.title}"></h4>
+                    <h4><a th:href="@{'/question/'+${question.id}}" th:text="${question.title}"></a></h4>
                     <span th:text="${question.tag}"></span>
                     <span class="des">
                         <span th:text="${question.comment_count}"></span>个回复·
@@ -63,8 +64,8 @@
         </div>
         <div class="col-lg-3 col-md-12 col-xs-12 col-sm-12">
             <div class="list-group section">
-                <a href="/profile/questions" class="list-group-item" th:classappend="${section=='questions'}?'active':''">我的问题
-                    <span class="badge">14</span>
+                <a href="/profile/questions" class="list-group-item" th:classappend="${section=='questions'}?'active':''">我的提问
+                    <span class="badge" th:text="${questions.totalCount}"></span>
                 </a>
                 <a href="/profile/replies" class="list-group-item" th:classappend="${section=='replies'}?'active':''">最新回复
                     <span class="badge">4</span>

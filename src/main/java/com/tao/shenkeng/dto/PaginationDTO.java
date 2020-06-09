@@ -16,9 +16,10 @@ public class PaginationDTO {
     private Integer page;
     private List<Integer> pages=new ArrayList<>();
     private Integer totalPage;
+    private Integer totalCount;
 
     public void setPagination(Integer totalCount, Integer page, Integer size) {
-
+        this.totalCount=totalCount;
         //判断页面总数
         if(totalCount%size!=0){
             totalPage=totalCount/size+1;

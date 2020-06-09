@@ -48,15 +48,13 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public PaginationDTO list(Integer id, Integer page, Integer size) {
+    public PaginationDTO list(Long id, Integer page, Integer size) {
         QuestionExample example = new QuestionExample();
-        example.createCriteria().andIdEqualTo(id);
+        example.createCriteria().andCreatorEqualTo(id);
         Integer totalCount =(int)(questionMapper.countByExample(example));
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer offset=size*(page-1);
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.createCriteria().andIdEqualTo(id);
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample,new RowBounds(offset,size));
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(),new RowBounds(offset,size));
         List<QuestionDTO> questionDTOList=new ArrayList<>();
 
         for (Question question:questions) {
@@ -71,7 +69,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public QuestionDTO getById(Integer id) {
+    public QuestionDTO getById(Long id) {
         Question question=questionMapper.selectByPrimaryKey(id);
         if (question==null){
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
@@ -88,6 +86,9 @@ public class QuestionService {
             //创建问题信息
             question.setGmt_create(System.currentTimeMillis());
             question.setGmt_modified(question.getGmt_create());
+            question.setComment_count((long) 0);
+            question.setLike_count((long) 0);
+            question.setView_count((long) 0);
             questionMapper.insert(question);
         }else{
             //更新
@@ -105,10 +106,17 @@ public class QuestionService {
         }
     }
     //浏览数,使用了自定义的incView方法进行数据更新
-    public void incView(Integer id) {
+    public void incView(Long id) {
         Question question = new Question();
         question.setId(id);
-        question.setView_count(1);
+        question.setView_count((long) 1);
         questionExtMapper.incView(question);
+    }
+    //评论数
+    public void incComment(Long id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setComment_count((long) 1);
+        questionExtMapper.incComment(question);
     }
 }

@@ -2,42 +2,102 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title th:text="${question.title}"></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <script type="text/javascript"  src="/webjars/jquery/2.1.1/jquery.js"  charset="UTF-8"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script type="text/javascript" src="/webjars/jquery/2.1.1/jquery.js" charset="UTF-8"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/js/shenkeng.js" type="application/javascript"></script>
     <link rel="stylesheet" href="/css/bootstrap.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.css"/>
     <link rel="stylesheet" href="/css/shenkeng.css"/>
 </head>
+
 <body>
 <div th:insert="navigation :: nav"></div>
-<div class="container-fluid main profile" >
+<div class="container-fluid main profile">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-xs-12 col-sm-12 question">
-            <h4><span  th:text="${question.title}"></span></h4>
-            <span class="des">
+
+            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 question">
+                <h4><span th:text="${question.title}"></span></h4>
+                <span class="des">
                         作者：<span th:text="${question.user.name}"></span>
                         <span>|</span>
                         <span th:text="${#dates.format(question.getGmt_create(),'yyyy-MM-dd')}"></span>
                         <span>|</span>
                         阅读数：<span th:text="${question.view_count}"></span>
                     </span>
-            <hr>
-            <span th:text="${question.description}"></span>
-            <hr>
-            <h6 th:if="${session.user!=null&&question.creator==session.user.id}">
-                <span  class="glyphicon glyphicon-pencil img"></span>
-                <a th:href="'/publish/'+${question.id}">编辑</a>
-             </h6>
+                <hr style="margin-bottom: 10px">
+                <span th:text="${question.description}"></span>
+                <hr>
+                <h6 th:if="${session.user!=null&&question.creator==session.user.id}">
+                    <span class="glyphicon glyphicon-pencil img"></span>
+                    <a th:href="'/publish/'+${question.id}">编辑</a>
+                </h6>
+                <hr>
+            </div>
+
+            <!--评论-->
+            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+                <h4>
+                    <span th:text="${question.comment_count}"></span>个回复
+                </h4>
+                <hr>
+                <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 question " th:each="comment:${commentViewDTOs}">
+                    <div class="media-left media-middle imgComment">
+                        <a href="#">
+                            <img class="media-object" th:src="${comment.user.avatar_url}"/>
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h5 class="media-heading">
+                            <span th:text="${comment.user.name}"></span>
+                        </h5>
+                        <div class="question">
+                            <span th:text="${comment.content}"></span>
+                        </div>
+                        <!--评论点赞-->
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="headingOne">
+                                    <h4 class="panel-title">
+                                        <span role="button" data-toggle="collapse" data-parent="#accordion"
+                                              th:href="${'#comment'+comment.id}" aria-expanded="true" aria-controls="collapseOne">
+                                           添加评论
+                                        </span>
+                                        <!--点赞-->
+                                        <span class="glyphicon glyphicon-heart-empty" style="float: right; ">
+                                        </span>
+                                    </h4>
+                                </div>
+                                <div th:id="${'comment'+comment.id}"  class="panel-collapse collapse " role="tabpanel"
+                                     aria-labelledby="headingOne">
+                                    <div class="panel-body">
+                                      我裂开了
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--回复-->
+            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 question" id="comment_section">
+                <input type="hidden" id="question_id" th:value="${question.id}">
+                <textarea class="form-control" rows="8" id="comment_content" placeholder="大佬留下点精华吧"></textarea>
+                <button type="button" class="btn btn-success comment-button" onclick="postComment()">回复</button>
+            </div>
         </div>
+
+
         <div class="col-lg-3 col-md-12 col-xs-12 col-sm-12 question">
             <div class="media-left media-middle">
                 <a href="#">
-                    <img class="media-object" th:src="${question.user.avatar_url}" />
+                    <img class="media-object" th:src="${question.user.avatar_url}"/>
                 </a>
             </div>
             <div class="media-body">
-                <h5 class="media-heading" >
+                <h5 class="media-heading">
                     <span th:if="${session.user!=null}" th:text="${question.user.name}"></span>
                 </h5>
             </div>
