@@ -12,7 +12,6 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserMapper userMapper;
-
     public void createOrUpDate(User user) {
         UserExample userExample=new UserExample();
         userExample.createCriteria().andAccount_idEqualTo(user.getAccount_id());

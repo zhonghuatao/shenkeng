@@ -20,7 +20,9 @@ public class IndexController {
                         @RequestParam(name = "page",defaultValue = "1")Integer page,
                         @RequestParam(name = "size",defaultValue = "4")Integer size) {
         PaginationDTO pagination=questionService.list(page,size);
+        PaginationDTO maxView = questionService.MaxView();
         model.addAttribute("pagination",pagination);
+        model.addAttribute("maxView",maxView);
         return "index";
     }
 }

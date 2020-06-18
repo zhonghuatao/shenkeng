@@ -14,7 +14,9 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -31,9 +33,10 @@ public class QuestionService {
         //分页数据
         QuestionExample example = new QuestionExample();
         Integer totalCount = (int)questionMapper.countByExample(example);
+        example.setOrderByClause("gmt_create desc" );
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer offset=size*(page-1);
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(),new RowBounds(offset,size));
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(example,new RowBounds(offset,size));
         List<QuestionDTO> questionDTOList=new ArrayList<>();
 
         for (Question question:questions) {
@@ -52,9 +55,10 @@ public class QuestionService {
         QuestionExample example = new QuestionExample();
         example.createCriteria().andCreatorEqualTo(id);
         Integer totalCount =(int)(questionMapper.countByExample(example));
+        example.setOrderByClause("gmt_create desc" );
         PaginationDTO paginationDTO = new PaginationDTO();
         Integer offset=size*(page-1);
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(),new RowBounds(offset,size));
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(example,new RowBounds(offset,size));
         List<QuestionDTO> questionDTOList=new ArrayList<>();
 
         for (Question question:questions) {
@@ -118,5 +122,40 @@ public class QuestionService {
         question.setId(id);
         question.setComment_count((long) 1);
         questionExtMapper.incComment(question);
+    }
+
+    //文章热度列表
+    public PaginationDTO MaxView() {
+        PaginationDTO paginationDTO = new PaginationDTO();
+        QuestionExample example=new QuestionExample();
+        List<Question> questions = questionMapper.selectByExample(example);
+        List<Long> viewList=new ArrayList<>();
+        for (Question question:questions) {
+            Long view_count = question.getView_count();
+            viewList.add(view_count);
+        }
+        List<QuestionDTO> questionDTOView=new ArrayList<>();
+        Collections.sort(viewList);
+        int count=0;
+        for (int i = viewList.size()-1; i >viewList.size()-6 ; i--) {
+            if (count==5){
+                break;
+            }else{
+                QuestionExample viewExample=new QuestionExample();
+                viewExample.createCriteria().andView_countEqualTo(viewList.get(i));
+                List<Question> questions1 = questionMapper.selectByExample(viewExample);
+                for (Question question:questions1) {
+                    QuestionDTO questionDTO=new QuestionDTO();
+                    BeanUtils.copyProperties(question,questionDTO);
+                    questionDTOView.add(questionDTO);
+                    count++;
+                    if (count==5){
+                        break;
+                    }
+                }
+            }
+        }
+        paginationDTO.setQuestions(questionDTOView);
+        return paginationDTO;
     }
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>神坑</title>
+    <title>ZHT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <script type="text/javascript" src="webjars/jquery/2.1.1/jquery.js" charset="UTF-8"></script>
     <script src="js/bootstrap.min.js" type="application/javascript"></script>
@@ -74,10 +74,9 @@
         </div>
 
         <div class="col-lg-3 col-md-12 col-xs-12 col-sm-12">
-            <h2>热门话题</h2>
-            <ul>
-                <li>Coffee</li>
-                <li>Tea</li>
+            <h2 >热门话题</h2>
+            <ul th:if="${maxView.questions}!=null" >
+                <li th:each="question:${maxView.questions}"><a  th:href="'/question/'+${question.id}" th:text="${question.title}"></a></li>
             </ul>
         </div>
     </div>

@@ -1,5 +1,6 @@
 package com.tao.shenkeng.controller;
 
+import com.tao.shenkeng.dto.PaginationDTO;
 import com.tao.shenkeng.dto.QuestionDTO;
 import com.tao.shenkeng.model.Question;
 import com.tao.shenkeng.model.User;
@@ -20,9 +21,12 @@ public class PublishController {
     @Autowired
     private QuestionService questionService;
 
+
     @GetMapping("/publish/{id}")
     public String edit(@PathVariable(name = "id") Long id,
                        Model model){
+        PaginationDTO maxView = questionService.MaxView();
+        model.addAttribute("maxView",maxView);
         QuestionDTO question = questionService.getById(id);
         model.addAttribute("title",question.getTitle());
         model.addAttribute("description",question.getDescription());
@@ -31,7 +35,9 @@ public class PublishController {
     }
 
     @GetMapping("/publish")
-    public String publish(){
+    public String publish(Model model){
+        PaginationDTO maxView = questionService.MaxView();
+        model.addAttribute("maxView",maxView);
         return "publish";
     }
 
@@ -43,10 +49,12 @@ public class PublishController {
             @RequestParam(value = "id",required = false) Long id,
             Model model,
             HttpServletRequest request ){
+
         User user = (User) request.getSession().getAttribute("user");
         model.addAttribute("title",title);
         model.addAttribute("description",description);
         model.addAttribute("tag",tag);
+
         if(user == null){
             model.addAttribute("error","用户未登录");
             return "publish";
